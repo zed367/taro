@@ -52,9 +52,3 @@ Cloudflare Pages에서 GitHub 저장소 `zed367/taro`를 연결합니다.
 - 빌드 출력 경로: `.`
 
 이후 `main`에 푸시하면 프로덕션 배포가 자동으로 갱신됩니다. 기능 브랜치 또는 Pull Request를 사용하면 Pages 미리보기 배포도 확인할 수 있습니다.
-
-직접 배포가 필요할 때는 Wrangler를 사용할 수 있습니다.
-
-```bash
-npx wrangler pages deploy . --project-name=taro
-```
