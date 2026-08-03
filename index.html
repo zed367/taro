@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오늘의 타로</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Cinzel:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+
+  <main class="stage">
+    <section class="screen active" id="screen-intro" aria-labelledby="intro-title">
+      <div class="ornament" aria-hidden="true">✦ ✦ ✦</div>
+      <h1 class="intro-title" id="intro-title"></h1>
+      <p class="intro-sub" id="intro-sub"></p>
+      <button class="btn" id="btn-start" type="button"></button>
+    </section>
+
+    <section class="screen" id="screen-pick" aria-labelledby="pick-guide">
+      <p class="pick-guide" id="pick-guide"></p>
+      <div class="deck" id="deck" role="group" aria-label="타로 카드 덱"></div>
+    </section>
+
+    <section class="screen" id="screen-result" aria-live="polite" aria-labelledby="result-name">
+      <div class="result-card">
+        <div class="result-inner" id="result-inner">
+          <div class="result-front" id="result-front"></div>
+          <div class="result-back" aria-hidden="true"></div>
+        </div>
+      </div>
+      <h2 class="result-name" id="result-name"></h2>
+      <p class="result-desc" id="result-desc"></p>
+      <button class="btn" id="btn-retry" type="button"></button>
+    </section>
+  </main>
+
+  <script src="data/cards.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
