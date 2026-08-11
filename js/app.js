@@ -15,7 +15,8 @@
     resultBack: document.querySelector(".result-back"),
     resultInner: document.getElementById("result-inner"),
     resultName: document.getElementById("result-name"),
-    resultDescription: document.getElementById("result-desc")
+    resultDescription: document.getElementById("result-desc"),
+    resultHandwriting: document.getElementById("result-handwriting")
   };
 
   const screens = {
@@ -116,6 +117,7 @@
 
     elements.resultName.textContent = card.name;
     elements.resultDescription.textContent = card.description;
+    renderHandwriting(card);
     restartRevealAnimation();
     showScreen("result");
   }
@@ -128,7 +130,26 @@
     elements.resultBack.style.backgroundImage = `url("${imageUrl}")`;
   }
 
-  function resolveImageUrl(image) {
+  function renderHandwriting(card) {
+    const imageUrl = resolveImageUrl(card.handwriting, "assets/handwriting");
+    elements.resultHandwriting.replaceChildren();
+
+    if (!imageUrl) {
+      elements.resultHandwriting.hidden = true;
+      return;
+    }
+
+    const image = document.createElement("img");
+    image.src = imageUrl;
+    image.alt = `${card.name} 캐릭터의 손글씨`;
+    image.addEventListener("error", () => {
+      elements.resultHandwriting.hidden = true;
+    }, { once: true });
+    elements.resultHandwriting.appendChild(image);
+    elements.resultHandwriting.hidden = false;
+  }
+
+  function resolveImageUrl(image, localBasePath = "assets/cards") {
     const source = image || {};
 
     if (imageStorage.mode === "remote" && source.remote) {
@@ -138,7 +159,7 @@
       }
     }
 
-    return source.local ? `assets/cards/${source.local.replace(/^\//, "")}` : "";
+    return source.local ? `${localBasePath}/${source.local.replace(/^\//, "")}` : "";
   }
 
   function isAbsoluteUrl(value) {
