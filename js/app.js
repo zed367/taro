@@ -2,6 +2,7 @@
   "use strict";
 
   const imageStorage = IMAGE_STORAGE;
+  const cardBack = CARD_BACK;
   const elements = {
     title: document.getElementById("intro-title"),
     subtitle: document.getElementById("intro-sub"),
@@ -11,6 +12,7 @@
     stars: document.getElementById("stars"),
     deck: document.getElementById("deck"),
     resultFront: document.getElementById("result-front"),
+    resultBack: document.querySelector(".result-back"),
     resultInner: document.getElementById("result-inner"),
     resultName: document.getElementById("result-name"),
     resultDescription: document.getElementById("result-desc")
@@ -25,6 +27,7 @@
   let shuffledCards = [];
 
   applyTexts();
+  applyCardBack();
   renderStars();
   bindEvents();
 
@@ -75,6 +78,7 @@
     elements.deck.replaceChildren();
     const total = shuffledCards.length;
     const spread = Math.min(64, total * 7);
+    const cardBackUrl = resolveImageUrl(cardBack.image);
 
     shuffledCards.forEach((card, index) => {
       const angle = total === 1 ? 0 : -spread / 2 + (spread / (total - 1)) * index;
@@ -86,6 +90,10 @@
       button.style.transform = `rotate(${angle}deg)`;
       button.setAttribute("aria-label", `${card.name} 선택`);
       cardFace.className = "card-face";
+      if (cardBackUrl) {
+        cardFace.classList.add("has-card-back");
+        cardFace.style.backgroundImage = `url("${cardBackUrl}")`;
+      }
       button.appendChild(cardFace);
       button.addEventListener("click", () => revealCard(card));
       elements.deck.appendChild(button);
@@ -94,7 +102,7 @@
 
   function revealCard(card) {
     elements.resultFront.replaceChildren();
-    const imageUrl = resolveImageUrl(card);
+    const imageUrl = resolveImageUrl(card.image);
 
     if (imageUrl) {
       const image = document.createElement("img");
@@ -112,17 +120,25 @@
     showScreen("result");
   }
 
-  function resolveImageUrl(card) {
-    const image = card.image || {};
+  function applyCardBack() {
+    const imageUrl = resolveImageUrl(cardBack.image);
+    if (!imageUrl) return;
 
-    if (imageStorage.mode === "remote" && image.remote) {
-      if (isAbsoluteUrl(image.remote)) return image.remote;
+    elements.resultBack.classList.add("has-card-back");
+    elements.resultBack.style.backgroundImage = `url("${imageUrl}")`;
+  }
+
+  function resolveImageUrl(image) {
+    const source = image || {};
+
+    if (imageStorage.mode === "remote" && source.remote) {
+      if (isAbsoluteUrl(source.remote)) return source.remote;
       if (imageStorage.remoteBaseUrl) {
-        return `${imageStorage.remoteBaseUrl.replace(/\/$/, "")}/${image.remote.replace(/^\//, "")}`;
+        return `${imageStorage.remoteBaseUrl.replace(/\/$/, "")}/${source.remote.replace(/^\//, "")}`;
       }
     }
 
-    return image.local ? `assets/cards/${image.local.replace(/^\//, "")}` : "";
+    return source.local ? `assets/cards/${source.local.replace(/^\//, "")}` : "";
   }
 
   function isAbsoluteUrl(value) {
