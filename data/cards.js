@@ -84,8 +84,8 @@ const CARDS = [
 ];
 
 const TEXTS = {
-  introTitle: "스텔라이브 7기 타로",
-  introSub: "카드를 한 장 뽑고, 7기의 웰컴 메시지를 확인해 보세요",
+  introTitle: "오늘의 스텔라 운세",
+  introSub: "스텔라와 함께면, 나쁜 하루는 없어요.",
   startButton: "타로 카드 뽑기",
   pickGuide: "마음이 가는 카드를 한 장 선택해 주세요",
   retryButton: "다시 뽑기"
