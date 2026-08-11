@@ -9,14 +9,17 @@
     startButton: document.getElementById("btn-start"),
     pickGuide: document.getElementById("pick-guide"),
     retryButton: document.getElementById("btn-retry"),
+    handwritingButton: document.getElementById("btn-handwriting"),
+    handwritingModal: document.getElementById("handwriting-modal"),
+    handwritingModalImage: document.getElementById("handwriting-modal-image"),
+    closeHandwritingButton: document.getElementById("btn-close-handwriting"),
     stars: document.getElementById("stars"),
     deck: document.getElementById("deck"),
     resultFront: document.getElementById("result-front"),
     resultBack: document.querySelector(".result-back"),
     resultInner: document.getElementById("result-inner"),
     resultName: document.getElementById("result-name"),
-    resultDescription: document.getElementById("result-desc"),
-    resultHandwriting: document.getElementById("result-handwriting")
+    resultDescription: document.getElementById("result-desc")
   };
 
   const screens = {
@@ -26,6 +29,7 @@
   };
 
   let shuffledCards = [];
+  let currentHandwriting = null;
 
   applyTexts();
   applyCardBack();
@@ -53,6 +57,14 @@
   function bindEvents() {
     elements.startButton.addEventListener("click", startDraw);
     elements.retryButton.addEventListener("click", startDraw);
+    elements.handwritingButton.addEventListener("click", openHandwritingModal);
+    elements.closeHandwritingButton.addEventListener("click", closeHandwritingModal);
+    elements.handwritingModal.addEventListener("click", (event) => {
+      if (event.target === elements.handwritingModal) closeHandwritingModal();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !elements.handwritingModal.hidden) closeHandwritingModal();
+    });
   }
 
   function startDraw() {
@@ -117,7 +129,7 @@
 
     elements.resultName.textContent = card.name;
     elements.resultDescription.textContent = card.description;
-    renderHandwriting(card);
+    prepareHandwriting(card);
     restartRevealAnimation();
     showScreen("result");
   }
@@ -130,23 +142,31 @@
     elements.resultBack.style.backgroundImage = `url("${imageUrl}")`;
   }
 
-  function renderHandwriting(card) {
+  function prepareHandwriting(card) {
     const imageUrl = resolveImageUrl(card.handwriting, "assets/handwriting");
-    elements.resultHandwriting.replaceChildren();
+    closeHandwritingModal();
+    currentHandwriting = imageUrl ? {
+      url: imageUrl,
+      alt: `${card.name} 캐릭터의 손글씨`
+    } : null;
+    elements.handwritingButton.hidden = !currentHandwriting;
+  }
 
-    if (!imageUrl) {
-      elements.resultHandwriting.hidden = true;
-      return;
-    }
+  function openHandwritingModal() {
+    if (!currentHandwriting) return;
 
-    const image = document.createElement("img");
-    image.src = imageUrl;
-    image.alt = `${card.name} 캐릭터의 손글씨`;
-    image.addEventListener("error", () => {
-      elements.resultHandwriting.hidden = true;
-    }, { once: true });
-    elements.resultHandwriting.appendChild(image);
-    elements.resultHandwriting.hidden = false;
+    elements.handwritingModalImage.src = currentHandwriting.url;
+    elements.handwritingModalImage.alt = currentHandwriting.alt;
+    elements.handwritingModal.hidden = false;
+    document.body.classList.add("modal-open");
+    elements.closeHandwritingButton.focus();
+  }
+
+  function closeHandwritingModal() {
+    if (elements.handwritingModal.hidden) return;
+
+    elements.handwritingModal.hidden = true;
+    document.body.classList.remove("modal-open");
   }
 
   function resolveImageUrl(image, localBasePath = "assets/cards") {

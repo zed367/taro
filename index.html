@@ -34,10 +34,20 @@
       </div>
       <h2 class="result-name" id="result-name"></h2>
       <p class="result-desc" id="result-desc"></p>
-      <button class="btn" id="btn-retry" type="button"></button>
-      <div class="result-handwriting" id="result-handwriting" hidden></div>
+      <div class="result-actions">
+        <button class="btn" id="btn-retry" type="button"></button>
+        <button class="btn" id="btn-handwriting" type="button" hidden>행운의 한마디</button>
+      </div>
     </section>
   </main>
+
+  <div class="handwriting-modal" id="handwriting-modal" role="dialog" aria-modal="true" aria-labelledby="handwriting-modal-title" hidden>
+    <div class="handwriting-modal__panel">
+      <button class="handwriting-modal__close" id="btn-close-handwriting" type="button" aria-label="행운의 한마디 닫기">×</button>
+      <p class="handwriting-modal__title" id="handwriting-modal-title">행운의 한마디</p>
+      <img class="handwriting-modal__image" id="handwriting-modal-image" alt="">
+    </div>
+  </div>
 
   <script src="data/cards.js"></script>
   <script src="js/app.js"></script>
